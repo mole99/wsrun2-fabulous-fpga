@@ -37,7 +37,7 @@ ifeq ($(SRAM),default)
 endif
 SRAM ?= gf180mcu_ocd_ip_sram
 
-ifeq ($(SRAM),gf180mcu_ocd_ip_sram)
+ifeq ($(SRAM),gf180mcu_fd_ip_sram)
     MACROS = 5v
 else
     MACROS = 3v3
