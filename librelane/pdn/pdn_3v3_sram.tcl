@@ -75,3 +75,24 @@ add_pdn_stripe \
     -pitch 43.50 \
     -starts_with GROUND \
     -number_of_straps 7
+
+# soc sram grid
+define_pdn_grid \
+    -macro \
+    -instances i_chip_core.por_inst \
+    -name por_grid \
+    -starts_with POWER
+
+add_pdn_stripe \
+    -grid por_grid \
+    -layer Metal4 \
+    -width 2.5 \
+    -pitch 7 \
+    -offset 0 \
+    -spacing 1 \
+    -nets "VSS VDD" \
+    -starts_with POWER
+
+add_pdn_connect \
+    -grid por_grid \
+    -layers "$::env(PDN_VERTICAL_LAYER) $::env(PDN_HORIZONTAL_LAYER)"

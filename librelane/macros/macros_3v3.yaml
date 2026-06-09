@@ -102,6 +102,45 @@ MACROS:
         location: [970, 500]
         orientation: E
 
+  efuse_spi_mem_256x8:
+    gds:
+      - pdk_dir::libs.ref/gf180mcu_re_efuse/gds/efuse_spi_mem_256x8.gds
+    lef:
+      - pdk_dir::libs.ref/gf180mcu_re_efuse/lef/efuse_spi_mem_256x8.lef
+    pnl:
+      - pdk_dir::libs.ref/gf180mcu_re_efuse/verilog/pnl/efuse_spi_mem_256x8.pnl.v
+    #vh:
+    #  - dir::../src/efuse_spi_mem_256x8.vh
+    lib:
+      "*_tt_025C_3v30":
+        - pdk_dir::libs.ref/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_tt_025C_5v00.lib
+      "*_ff_n40C_3v60":
+        - pdk_dir::libs.ref/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_ff_n40C_5v50.lib
+      "*_ss_125C_3v00":
+        - pdk_dir::libs.ref/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_ss_125C_4v50.lib
+    instances:
+      # Make sure to specify the SRAMs in pdn_cfg.tcl
+      i_chip_core.efuse_spi_mem_256x8:
+        location: [1000, 1000]
+        orientation: N
+
+  simple_por:
+    gds:
+      - dir::../ip/simple_por/gds/simple_por.gds.gz
+    lef:
+      - dir::../ip/simple_por/lef/simple_por.lef
+    nl:
+      - dir::../ip/simple_por/verilog/simple_por.v
+    instances:  
+      i_chip_core.por_inst:
+        location: [2617, 510]
+        orientation: MX
+
+RSZ_DONT_TOUCH_LIST:
+- por
+- porb
+- npor
+
 # This is an alternative method compared to
 # specifying the power connections in the RTL
 PDN_MACRO_CONNECTIONS:

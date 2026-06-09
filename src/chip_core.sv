@@ -96,6 +96,33 @@ module chip_core #(
     );
 
     assign bidir_out = count ^ {24'd0, sram_0_out, sram_1_out};
+    
+    (* keep *)
+    efuse_spi_mem_256x8 efuse_spi_mem_256x8 (
+    //`ifdef USE_POWER_PINS
+    //    .VDD(VDD),
+    //    .VSS(VSS),
+    //`endif
+      .clk_i    (),
+      .npor     (),
+      .spi_clk  (),
+      .spi_csn  (),
+      .spi_miso (),
+      .spi_mosi ()
+    );
+
+    wire porb, por, npor;
+
+    // Power-on-reset circuit
+    (* keep *) simple_por por_inst (
+    /*`ifdef USE_POWER_PINS
+        .VDD(VDD),
+        .VSS(VSS),
+    `endif*/
+        .porb(porb),
+        .por(por)
+    );
+    assign npor = porb;
 
 endmodule
 
