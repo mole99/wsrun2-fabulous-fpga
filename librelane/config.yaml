@@ -32,6 +32,10 @@ DESIGN_NAME: chip_top
 VERILOG_FILES:
 - dir::../src/chip_top.sv
 - dir::../src/chip_core.sv
+- dir::../src/fabric_wrapper.sv
+- dir::../ip/fabric_config/fabric_config.sv
+- dir::../ip/fabric_config/fabric_spi_controller.sv
+- dir::../ip/fabric_config/fabric_spi_receiver.sv
 
 # Enable plugin for better SystemVerilog support
 # USE_SLANG: True
@@ -55,11 +59,13 @@ GND_NETS:
 # due to the unused Y output for output only pads
 IGNORE_DISCONNECTED_MODULES:
 - gf180mcu_fd_io__bi_24t
+- gf180mcu_ocd_io__bi_24t
 - gf180mcu_ws_ip__qrcode_id
 - gf180mcu_ws_ip__shuttle_id
 - gf180mcu_ws_ip__project_id
 - gf180mcu_ws_ip__logo
 - gf180mcu_ws_ip__marker
+- gf180mcu_ws_ip__credits
 
 # Clock
 CLOCK_PORT: clk_PAD

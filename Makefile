@@ -7,6 +7,9 @@ PDK_ROOT ?= $(MAKEFILE_DIR)/gf180mcu
 PDK ?= gf180mcuD
 PDK_COMMIT ?= f6bfbd4d3d23c4236ff1f36126489ee59aa35cbd
 
+TILE_LIBRARY ?= classic
+FABRIC ?= classic_fabric_wsrun2
+
 # Available SCL libraries:
 # gf180mcu_as_sc_mcu7t3v3
 # gf180mcu_fd_sc_mcu7t5v0
@@ -133,3 +136,15 @@ sim-gl: clone-pdk defines ## Run gate-level simulation with cocotb (after copy-f
 sim-view: ## View simulation waveforms in GTKWave
 	gtkwave cocotb/sim_build/chip_top.fst
 .PHONY: sim-view
+
+###
+
+tiles:
+	cd ip/fabulous-tiles/; PDK=${PDK} SCL=${SCL} TILE_LIBRARY=classic nix develop --command make all
+.PHONY: tiles
+
+fabric:
+	cd ip/fabulous-fabrics/; PDK=${PDK} SCL=${SCL} TILE_LIBRARY=classic nix develop --command make ${FABRIC}
+.PHONY: tiles
+
+

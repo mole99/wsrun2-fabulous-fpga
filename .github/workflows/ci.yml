@@ -28,6 +28,83 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' || !(startsWith(github.ref_name, 'version-') || github.ref_name == 'main' || github.ref_name == 'dev') }}
 
 jobs:
+  tiles:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        pdk: [gf180mcuD]
+        tile_library: [classic]
+        scl: [gf180mcu_as_sc_mcu7t3v3]
+    name: Tiles (${{ matrix.tile_library }}/${{ matrix.pdk }}/${{ matrix.scl }})
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: 'true'
+      - name: Setup Nix
+        uses: ./.github/actions/setup_nix
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get the tile library hash
+        run: |
+          echo "TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD:ip/fabulous-tiles)" >> $GITHUB_ENV
+      - name: Cache the tiles
+        uses: actions/cache@v5
+        id: cache
+        with:
+          path: ip/fabulous-tiles/tiles
+          key: cache-tiles-${{ matrix.tile_library }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.TILE_LIBRARY_SHORT_HASH }}
+      - name: Implement the tiles
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          make tiles
+
+  fabrics:
+    runs-on: ubuntu-24.04
+    needs: [tiles]
+    strategy:
+      matrix:
+        pdk: [gf180mcuD]
+        fabric: [classic_fabric_wsrun2]
+        scl: [gf180mcu_as_sc_mcu7t3v3]
+    name: Fabric (${{ matrix.fabric }}/${{ matrix.pdk }}/${{ matrix.scl }})
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: 'true'
+      - name: Setup Nix
+        uses: ./.github/actions/setup_nix
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get the tile library
+        run: |
+          echo "TILE_LIBRARY=$(echo "${{ matrix.fabric }}" | cut -d'_' -f1)" >> $GITHUB_ENV
+          echo "TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD:ip/fabulous-tiles)" >> $GITHUB_ENV
+      - name: Restore the tiles
+        uses: actions/cache/restore@v5
+        with:
+          path: ip/fabulous-tiles/tiles
+          key: cache-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.TILE_LIBRARY_SHORT_HASH }}
+          fail-on-cache-miss: true
+      - name: Stitch the fabric
+        run: |
+          make fabric
+      - name: Upload Macro Folder
+        if: success() || failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.fabric }}_${{ matrix.pdk }}_${{ matrix.scl }}
+          path: ip/fabulous-fabrics/fabrics/${{ matrix.fabric }}/macro/${{ matrix.pdk }}/
+          include-hidden-files: true
+      - name: Implement the User Designs
+        run: |
+          cd ip/fabulous-fabrics/user_designs; PDK=${{ matrix.pdk }} TILE_LIBRARY=${{ env.TILE_LIBRARY }} FABRIC=${{ matrix.fabric }} nix develop --command make all
+      - name: Simulate the Fabric (RTL Emulation)
+        run: |
+          cd ip/fabulous-fabrics; EMULATION=counter PDK=${{ matrix.pdk }} TILE_LIBRARY=${{ env.TILE_LIBRARY }} FABRIC=${{ matrix.fabric }} nix develop --command bash -c "cd tb; python3 fabric_tb.py"
+      - name: Simulate the Fabric (RTL Simulation)
+        run: |
+          cd ip/fabulous-fabrics; PDK=${{ matrix.pdk }} TILE_LIBRARY=${{ env.TILE_LIBRARY }} FABRIC=${{ matrix.fabric }} nix develop --command bash -c "cd tb; python3 fabric_tb.py"
+
   prepare:
     runs-on: ubuntu-latest
     steps:
