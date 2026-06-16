@@ -1,0 +1,95 @@
+* eFuse array netlist with word_width=8, nwords=1
+
+.SUBCKT gf180mcu_fd_sc_mcu7t5v0__inv_1 I ZN VDD VNW VPW VSS
+X0 ZN I VSS VPW nfet_06v0 W=8.2e-07 L=6e-07  
+X1 ZN I VDD VNW pfet_06v0 W=1.22e-06 L=5e-07
+.ENDS
+
+.SUBCKT gf180mcu_fd_sc_mcu7t5v0__inv_2 I ZN VDD VNW VPW VSS
+X00 ZN I VSS VPW nfet_06v0 W=8.2e-07 L=6e-07
+X01 VSS I ZN VPW nfet_06v0 W=8.2e-07 L=6e-07
+X10 ZN I VDD VNW pfet_06v0 W=1.22e-06 L=5e-07
+X11 VDD I ZN VNW pfet_06v0 W=1.22e-06 L=5e-07
+.ENDS
+
+.SUBCKT gf180mcu_fd_sc_mcu7t5v0__fillcap_4 VDD VNW VPW VSS
+X17 net_1 net_0 VSS VPW nfet_06v0 W=8.2e-07 L=1e-06
+X19 VDD net_1 net_0 VNW pfet_06v0 W=1.22e-06 L=1e-06
+.ENDS
+
+.subckt efuse_bitcell_async VSS VDD ANODE PARAMS: NUM=-1
+X0 ANODE VSS efuse NUM={NUM}
+.ends
+
+.subckt efuse_senseamp VSS VPW VDD PRESET_N OUT SENSE FUSE
+X2 net1 PRESET_N VDD VDD pfet_06v0 L=0.5u W=2.44u nf=2
+X1 net2 OUT VDD VDD VPW VSS  gf180mcu_fd_sc_mcu7t5v0__inv_1
+X2 net1 net2 VDD VDD VPW VSS gf180mcu_fd_sc_mcu7t5v0__inv_1
+X3 net2 net1 VDD VDD VPW VSS gf180mcu_fd_sc_mcu7t5v0__inv_1
+X1 net1 SENSE FUSE VPW nfet_06v0 L=0.60u W=0.82u
+.ends
+
+
+.subckt efuse_array_async_1x8 VSS VDD COL_PROG_N[0] OUT[0] COL_PROG_N[1] OUT[1] COL_PROG_N[2] OUT[2] COL_PROG_N[3] OUT[3] COL_PROG_N[4] OUT[4] COL_PROG_N[5] OUT[5] COL_PROG_N[6] OUT[6] COL_PROG_N[7] OUT[7] SENSE PRESET_N  
+X0 VSS VDD bitline[0] efuse_bitcell_async NUM={LNUM*1000+0}
+Xprog0_0 bitline[0] COL_PROG_N[0] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_0 bitline[0] COL_PROG_N[0] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense0 VSS VSS VDD PRESET_N OUT[0] SENSE bitline[0] efuse_senseamp
+X1 VSS VDD bitline[1] efuse_bitcell_async NUM={LNUM*1000+1}
+Xprog0_1 bitline[1] COL_PROG_N[1] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_1 bitline[1] COL_PROG_N[1] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense1 VSS VSS VDD PRESET_N OUT[1] SENSE bitline[1] efuse_senseamp
+X2 VSS VDD bitline[2] efuse_bitcell_async NUM={LNUM*1000+2}
+Xprog0_2 bitline[2] COL_PROG_N[2] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_2 bitline[2] COL_PROG_N[2] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense2 VSS VSS VDD PRESET_N OUT[2] SENSE bitline[2] efuse_senseamp
+X3 VSS VDD bitline[3] efuse_bitcell_async NUM={LNUM*1000+3}
+Xprog0_3 bitline[3] COL_PROG_N[3] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_3 bitline[3] COL_PROG_N[3] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense3 VSS VSS VDD PRESET_N OUT[3] SENSE bitline[3] efuse_senseamp
+X4 VSS VDD bitline[4] efuse_bitcell_async NUM={LNUM*1000+4}
+Xprog0_4 bitline[4] COL_PROG_N[4] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_4 bitline[4] COL_PROG_N[4] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense4 VSS VSS VDD PRESET_N OUT[4] SENSE bitline[4] efuse_senseamp
+X5 VSS VDD bitline[5] efuse_bitcell_async NUM={LNUM*1000+5}
+Xprog0_5 bitline[5] COL_PROG_N[5] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_5 bitline[5] COL_PROG_N[5] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense5 VSS VSS VDD PRESET_N OUT[5] SENSE bitline[5] efuse_senseamp
+X6 VSS VDD bitline[6] efuse_bitcell_async NUM={LNUM*1000+6}
+Xprog0_6 bitline[6] COL_PROG_N[6] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_6 bitline[6] COL_PROG_N[6] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense6 VSS VSS VDD PRESET_N OUT[6] SENSE bitline[6] efuse_senseamp
+X7 VSS VDD bitline[7] efuse_bitcell_async NUM={LNUM*1000+7}
+Xprog0_7 bitline[7] COL_PROG_N[7] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xprog1_7 bitline[7] COL_PROG_N[7] VDD VDD pfet_06v0 L=0.50u W=62u nf=2
+Xsense7 VSS VSS VDD PRESET_N OUT[7] SENSE bitline[7] efuse_senseamp
+
+.ends
+    
+
+.subckt efuse_async_mem_1x8 VSS VDD prog[0] out[0] prog[1] out[1] prog[2] out[2] prog[3] out[3] prog[4] out[4] prog[5] out[5] prog[6] out[6] prog[7] out[7] reset_n ready  
+X0 VSS VDD COL_PROG_N[0] OUT[0] COL_PROG_N[1] OUT[1] COL_PROG_N[2] OUT[2] COL_PROG_N[3] OUT[3] COL_PROG_N[4] OUT[4] COL_PROG_N[5] OUT[5] COL_PROG_N[6] OUT[6] COL_PROG_N[7] OUT[7] sense preset_n  efuse_array_async_1x8 LNUM=0
+
+Xinv_res RESET_N RESET VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__inv_2
+Xdel_resn0 RESET_N RESET_N_DEL0 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyd_4
+Xdel_resn1 RESET_N_DEL0 RESET_N_DEL1 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyd_4
+Xor_preset RESET RESET_N_DEL1 PRESET_N VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__or2_2
+
+Xinv_resnd RESET_N_DEL1 RESET_DEL0 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__inv_2
+Xdel_res0 RESET_DEL0 RESET_DEL1 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyd_4
+Xdel_res1 RESET_DEL1 RESET_DEL2 VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyd_4
+Xand_sense RESET_N_DEL1 RESET_DEL2 SENSE_PREDEL VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__and2_2
+Xdel_sense SENSE_PREDEL SENSE VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__dlyd_4
+Xnand_wrinhibit0 RESET_N PROG[0] COL_PROG_N[0] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+Xnand_wrinhibit1 RESET_N PROG[1] COL_PROG_N[1] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+Xnand_wrinhibit2 RESET_N PROG[2] COL_PROG_N[2] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+Xnand_wrinhibit3 RESET_N PROG[3] COL_PROG_N[3] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+Xnand_wrinhibit4 RESET_N PROG[4] COL_PROG_N[4] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+Xnand_wrinhibit5 RESET_N PROG[5] COL_PROG_N[5] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+Xnand_wrinhibit6 RESET_N PROG[6] COL_PROG_N[6] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+Xnand_wrinhibit7 RESET_N PROG[7] COL_PROG_N[7] VDD VDD VSS VSS gf180mcu_fd_sc_mcu7t5v0__nand2_2
+
+.ends
+    
+.end
+    
