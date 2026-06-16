@@ -17,6 +17,9 @@ module fabric_wrapper #(
 
     input                                sys_reset_i,
 
+    // Power on reset
+    input                                npor_i,
+
     // I/Os West
     input  [FABRIC_NUM_IO_WEST-1:0]      io_west_in_i,
     output [FABRIC_NUM_IO_WEST-1:0]      io_west_out_o,
@@ -86,6 +89,22 @@ module fabric_wrapper #(
     logic        fabric_sram5_gwen_o;
     logic        fabric_sram5_cen_o;
     logic        fabric_sram5_clk_o;
+
+    // eFuse 0
+    logic fabric_efuse0_clk_o;
+    logic fabric_efuse0_rst_o;
+    logic fabric_efuse0_spi_clk_o;
+    logic fabric_efuse0_spi_csn_o;
+    logic fabric_efuse0_spi_miso_i;
+    logic fabric_efuse0_spi_mosi_o;
+
+    // eFuse 1
+    logic fabric_efuse1_clk_o;
+    logic fabric_efuse1_rst_o;
+    logic fabric_efuse1_spi_clk_o;
+    logic fabric_efuse1_spi_csn_o;
+    logic fabric_efuse1_spi_miso_i;
+    logic fabric_efuse1_spi_mosi_o;
 
     classic_fabric_wsrun2
     //#(
@@ -531,7 +550,6 @@ module fabric_wrapper #(
         .Tile_X8Y2_CEN_SRAM(fabric_sram0_cen_o),
         .Tile_X8Y2_CLK_SRAM(fabric_sram0_clk_o),
         .Tile_X8Y2_CONFIGURED_top(configured_i),
-
         // SRAM 1
         .Tile_X8Y4_Q_SRAM0(fabric_sram1_q_i[0]),
         .Tile_X8Y4_Q_SRAM1(fabric_sram1_q_i[1]),
@@ -571,7 +589,6 @@ module fabric_wrapper #(
         .Tile_X8Y4_CEN_SRAM(fabric_sram1_cen_o),
         .Tile_X8Y4_CLK_SRAM(fabric_sram1_clk_o),
         .Tile_X8Y4_CONFIGURED_top(configured_i),
-
         // SRAM 2
         .Tile_X8Y6_Q_SRAM0(fabric_sram2_q_i[0]),
         .Tile_X8Y6_Q_SRAM1(fabric_sram2_q_i[1]),
@@ -611,7 +628,6 @@ module fabric_wrapper #(
         .Tile_X8Y6_CEN_SRAM(fabric_sram2_cen_o),
         .Tile_X8Y6_CLK_SRAM(fabric_sram2_clk_o),
         .Tile_X8Y6_CONFIGURED_top(configured_i),
-
         // SRAM 3
         .Tile_X8Y8_Q_SRAM0(fabric_sram3_q_i[0]),
         .Tile_X8Y8_Q_SRAM1(fabric_sram3_q_i[1]),
@@ -651,7 +667,6 @@ module fabric_wrapper #(
         .Tile_X8Y8_CEN_SRAM(fabric_sram3_cen_o),
         .Tile_X8Y8_CLK_SRAM(fabric_sram3_clk_o),
         .Tile_X8Y8_CONFIGURED_top(configured_i),
-
         // SRAM 4
         .Tile_X8Y10_Q_SRAM0(fabric_sram4_q_i[0]),
         .Tile_X8Y10_Q_SRAM1(fabric_sram4_q_i[1]),
@@ -691,7 +706,6 @@ module fabric_wrapper #(
         .Tile_X8Y10_CEN_SRAM(fabric_sram4_cen_o),
         .Tile_X8Y10_CLK_SRAM(fabric_sram4_clk_o),
         .Tile_X8Y10_CONFIGURED_top(configured_i),
-
         // SRAM 5
         .Tile_X8Y12_Q_SRAM0(fabric_sram5_q_i[0]),
         .Tile_X8Y12_Q_SRAM1(fabric_sram5_q_i[1]),
@@ -730,7 +744,24 @@ module fabric_wrapper #(
         .Tile_X8Y12_GWEN_SRAM(fabric_sram5_gwen_o),
         .Tile_X8Y12_CEN_SRAM(fabric_sram5_cen_o),
         .Tile_X8Y12_CLK_SRAM(fabric_sram5_clk_o),
-        .Tile_X8Y12_CONFIGURED_top(configured_i)
+        .Tile_X8Y12_CONFIGURED_top(configured_i),
+        // eFuse 0
+        .Tile_X2Y13_EFUSE_A_CLK_top(fabric_efuse0_clk_o),
+        .Tile_X2Y13_EFUSE_A_RST_top(fabric_efuse0_rst_o),
+        .Tile_X2Y13_EFUSE_A_SPI_CLK_top(fabric_efuse0_spi_clk_o),
+        .Tile_X2Y13_EFUSE_A_SPI_CSN_top(fabric_efuse0_spi_csn_o),
+        .Tile_X2Y13_EFUSE_A_SPI_MISO_top(fabric_efuse0_spi_miso_i),
+        .Tile_X2Y13_EFUSE_A_SPI_MOSI_top(fabric_efuse0_spi_mosi_o),
+        .Tile_X2Y13_EFUSE_A_CONFIGURED_top(configured_i),
+
+        // eFuse 1
+        .Tile_X6Y13_EFUSE_A_CLK_top(fabric_efuse1_clk_o),
+        .Tile_X6Y13_EFUSE_A_RST_top(fabric_efuse1_rst_o),
+        .Tile_X6Y13_EFUSE_A_SPI_CLK_top(fabric_efuse1_spi_clk_o),
+        .Tile_X6Y13_EFUSE_A_SPI_CSN_top(fabric_efuse1_spi_csn_o),
+        .Tile_X6Y13_EFUSE_A_SPI_MISO_top(fabric_efuse1_spi_miso_i),
+        .Tile_X6Y13_EFUSE_A_SPI_MOSI_top(fabric_efuse1_spi_mosi_o),
+        .Tile_X6Y13_EFUSE_A_CONFIGURED_top(configured_i)
 
     );
 
@@ -804,6 +835,28 @@ module fabric_wrapper #(
       .A        (fabric_sram5_a_o),
       .D        (fabric_sram5_d_o),
       .Q        (fabric_sram5_q_i)
+    );
+        
+    // eFuse 0 instance
+
+    efuse_spi_mem_256x8 efuse_0 (
+      .clk_i      (fabric_efuse0_clk_o),
+      .npor       (npor_i && !fabric_efuse0_rst_o),
+      .spi_clk    (fabric_efuse0_spi_clk_o),
+      .spi_csn    (fabric_efuse0_spi_csn_o),
+      .spi_miso   (fabric_efuse0_spi_miso_i),
+      .spi_mosi   (fabric_efuse0_spi_mosi_o)
+    );
+        
+    // eFuse 1 instance
+
+    efuse_spi_mem_256x8 efuse_1 (
+      .clk_i      (fabric_efuse1_clk_o),
+      .npor       (npor_i && !fabric_efuse1_rst_o),
+      .spi_clk    (fabric_efuse1_spi_clk_o),
+      .spi_csn    (fabric_efuse1_spi_csn_o),
+      .spi_miso   (fabric_efuse1_spi_miso_i),
+      .spi_mosi   (fabric_efuse1_spi_mosi_o)
     );
         
 endmodule

@@ -117,7 +117,7 @@ module chip_core #(
     
     // Config busy
     wire spi_miso;
-    assign config_busy_o = fabric_config_busy ^ spi_miso; // TODO
+    assign config_busy_o = fabric_config_busy;
     
     logic [31:0] spi_bitstream_data, spi_controller_bitstream_data_o, spi_receiver_bitstream_data_o;
     logic        spi_bitstream_valid, spi_controller_bitstream_valid_o, spi_receiver_bitstream_valid_o;
@@ -340,6 +340,9 @@ module chip_core #(
         .configured_i   (fabric_config_configured),
         .sys_reset_i    (fabric_config_busy),
         
+        // Power on reset
+        .npor_i (npor),
+        
         // I/Os West
         .io_west_in_i  (fabric_io_west_in_i),
         .io_west_out_o (fabric_io_west_out_o),
@@ -367,20 +370,6 @@ module chip_core #(
         .por(por)
     );
     assign npor = porb;
-
-    efuse_spi_mem_256x8 efuse_spi_mem_256x8 (
-    `ifdef USE_POWER_PINS
-        .VDD(VDD),
-        .VSS(VSS),
-    `endif
-      .clk_i    (clk),
-      .npor     (npor),
-      .spi_clk  (1'b0),
-      .spi_csn  (1'b0),
-      .spi_miso (spi_miso),
-      .spi_mosi (1'b0)
-    );
-
 
 endmodule
 

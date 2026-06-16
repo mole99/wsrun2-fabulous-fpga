@@ -10,6 +10,7 @@ BELS_PER_IO_TILE = ['A', 'B', 'C', 'D']
 NUM_SRAM = 6
 SRAM_WIDTH = 8
 SRAM_ADDR_BITS = 10
+EFUSE_LOC = ["X2Y13", "X6Y13"]
 
 with open('fabric_wrapper.sv', 'w') as f:
     with redirect_stdout(f):
@@ -32,6 +33,9 @@ with open('fabric_wrapper.sv', 'w') as f:
         print(f'    // Fabric is configured')
         print("""    input                                configured_i,\n""")
         print("""    input                                sys_reset_i,\n""")
+
+        print(f'    // Power on reset')
+        print("""    input                                npor_i,\n""")
 
         # I/Os
         print(f'    // I/Os West')
@@ -61,7 +65,17 @@ with open('fabric_wrapper.sv', 'w') as f:
     logic        fabric_sram{i}_gwen_o;
     logic        fabric_sram{i}_cen_o;
     logic        fabric_sram{i}_clk_o;\n""")
-        
+
+        # eFuses
+        for i in range(len(EFUSE_LOC)):
+            print(f'    // eFuse {i}')
+            print(f"""    logic fabric_efuse{i}_clk_o;
+    logic fabric_efuse{i}_rst_o;
+    logic fabric_efuse{i}_spi_clk_o;
+    logic fabric_efuse{i}_spi_csn_o;
+    logic fabric_efuse{i}_spi_miso_i;
+    logic fabric_efuse{i}_spi_mosi_o;\n""")
+
         print(f"""    {FABRIC_NAME}
     //#(
     //    .MaxFramesPerCol(MaxFramesPerCol),
@@ -116,17 +130,26 @@ with open('fabric_wrapper.sv', 'w') as f:
             print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_GWEN_SRAM(fabric_sram{i}_gwen_o),')
             print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CEN_SRAM(fabric_sram{i}_cen_o),')
             print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CLK_SRAM(fabric_sram{i}_clk_o),')
+            print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CONFIGURED_top(configured_i),')
+
+        for i, loc in enumerate(EFUSE_LOC):
+            print(f'        // eFuse {i}')
+            print(f'        .Tile_{loc}_EFUSE_A_CLK_top(fabric_efuse{i}_clk_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_RST_top(fabric_efuse{i}_rst_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_CLK_top(fabric_efuse{i}_spi_clk_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_CSN_top(fabric_efuse{i}_spi_csn_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_MISO_top(fabric_efuse{i}_spi_miso_i),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_MOSI_top(fabric_efuse{i}_spi_mosi_o),')
             
-            if (i==NUM_SRAM-1):
-                print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CONFIGURED_top(configured_i)')
+            if (i==len(EFUSE_LOC)-1):
+                print(f'        .Tile_{loc}_EFUSE_A_CONFIGURED_top(configured_i)')
             else:
-                print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CONFIGURED_top(configured_i),')
+                print(f'        .Tile_{loc}_EFUSE_A_CONFIGURED_top(configured_i),')
             print('')
 
         print("    );\n")
 
         for i in range(NUM_SRAM):
-
             print(f"""    // SRAM {i} instance
 
     gf180mcu_ocd_ip_sram__sram1024x8m8wm1 sram_{i} (
@@ -139,5 +162,20 @@ with open('fabric_wrapper.sv', 'w') as f:
       .Q        (fabric_sram{i}_q_i)
     );
         """)
+
+        for i, loc in enumerate(EFUSE_LOC):
+            print(f"""    // eFuse {i} instance
+
+    efuse_spi_mem_256x8 efuse_{i} (
+      .clk_i      (fabric_efuse{i}_clk_o),
+      .npor       (npor_i && !fabric_efuse{i}_rst_o),
+      .spi_clk    (fabric_efuse{i}_spi_clk_o),
+      .spi_csn    (fabric_efuse{i}_spi_csn_o),
+      .spi_miso   (fabric_efuse{i}_spi_miso_i),
+      .spi_mosi   (fabric_efuse{i}_spi_mosi_o)
+    );
+        """)
+
+
 
         print("endmodule")

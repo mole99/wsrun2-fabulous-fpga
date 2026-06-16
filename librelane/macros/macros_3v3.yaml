@@ -146,9 +146,11 @@ MACROS:
       "*_ss_125C_3v00":
         - dir::../ip/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_ss_125C_4v50.lib
     instances:
-      # Make sure to specify the SRAMs in pdn_cfg.tcl
-      i_chip_core.efuse_spi_mem_256x8:
-        location: [1350, 495]
+      i_chip_core.fabric_wrapper.efuse_0:
+        location: [750, 495]
+        orientation: N
+      i_chip_core.fabric_wrapper.efuse_1:
+        location: [1750, 495]
         orientation: N
 
   simple_por:
@@ -190,5 +192,5 @@ PDN_MACRO_CONNECTIONS:
 - "i_chip_core.fabric_wrapper.sram_3 VDD VSS VDD VSS"
 - "i_chip_core.fabric_wrapper.sram_4 VDD VSS VDD VSS"
 - "i_chip_core.fabric_wrapper.sram_5 VDD VSS VDD VSS"
-- "i_chip_core.efuse_spi_mem_256x8 VDD VSS VDD VSS"
-
+- "i_chip_core.fabric_wrapper.efuse_0 VDD VSS VDD VSS"
+- "i_chip_core.fabric_wrapper.efuse_1 VDD VSS VDD VSS"
