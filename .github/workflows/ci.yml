@@ -86,7 +86,7 @@ jobs:
       - name: Implement the tiles
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          make tiles
+          make extra-tiles
 
   fabrics:
     runs-on: ubuntu-24.04
