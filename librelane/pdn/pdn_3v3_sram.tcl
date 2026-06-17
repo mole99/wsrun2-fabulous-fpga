@@ -8,7 +8,13 @@ define_pdn_grid \
       i_chip_core.fabric_wrapper.sram_2 \
       i_chip_core.fabric_wrapper.sram_3 \
       i_chip_core.fabric_wrapper.sram_4 \
-      i_chip_core.fabric_wrapper.sram_5" \
+      i_chip_core.fabric_wrapper.sram_5 \
+      i_chip_core.fabric_wrapper.sram_6 \
+      i_chip_core.fabric_wrapper.sram_7 \
+      i_chip_core.fabric_wrapper.sram_8 \
+      i_chip_core.fabric_wrapper.sram_9 \
+      i_chip_core.fabric_wrapper.sram_10 \
+      i_chip_core.fabric_wrapper.sram_11" \
     -name sram_macros_WE \
     -starts_with POWER \
     -halo "$::env(PDN_HORIZONTAL_HALO) $::env(PDN_VERTICAL_HALO)"
@@ -28,7 +34,7 @@ add_pdn_stripe \
     -width 1.36 \
     -offset 0.68 \
     -spacing 0.28 \
-    -pitch 319.09 \
+    -pitch 513.01 \
     -starts_with POWER \
     -number_of_straps 2
 
@@ -42,7 +48,7 @@ add_pdn_stripe \
     -spacing 0.28 \
     -pitch 43.50 \
     -starts_with GROUND \
-    -number_of_straps 7
+    -number_of_straps 11
 
 # soc sram grid
 define_pdn_grid \

@@ -7,9 +7,12 @@ ROWS = 14
 
 FABRIC_NUM_IO_WEST = 48
 BELS_PER_IO_TILE = ['A', 'B', 'C', 'D']
-NUM_SRAM = 6
+
+NUM_SRAM = 12
+SRAM_LOC = [f"X8Y{i}" for i in range(1, NUM_SRAM+1)]
 SRAM_WIDTH = 8
 SRAM_ADDR_BITS = 10
+
 EFUSE_LOC = ["X2Y13", "X6Y13"]
 
 with open('fabric_wrapper.sv', 'w') as f:
@@ -115,22 +118,20 @@ with open('fabric_wrapper.sv', 'w') as f:
         .Tile_{warmboot_coords}_SLOT_top3(fabric_warmboot_slot_o[3]),\n""")
 
         # SRAM
-        sram_coords = f'X{COLUMNS-1}'
-        sram_y_start = 2
-        for i in range(NUM_SRAM):
+        for i, loc in enumerate(SRAM_LOC):
             print(f'        // SRAM {i}')
             for j in range(SRAM_WIDTH):
-                print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_Q_SRAM{j}(fabric_sram{i}_q_i[{j}]),')
+                print(f'        .Tile_{loc}_Q_SRAM{j}(fabric_sram{i}_q_i[{j}]),')
             for j in range(SRAM_ADDR_BITS):
-                print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_A_SRAM{j}(fabric_sram{i}_a_o[{j}]),')
+                print(f'        .Tile_{loc}_A_SRAM{j}(fabric_sram{i}_a_o[{j}]),')
             for j in range(SRAM_WIDTH):
-                print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_WEN_SRAM{j}(fabric_sram{i}_wen_o[{j}]),')
+                print(f'        .Tile_{loc}_WEN_SRAM{j}(fabric_sram{i}_wen_o[{j}]),')
             for j in range(SRAM_WIDTH):
-                print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_D_SRAM{j}(fabric_sram{i}_d_o[{j}]),')
-            print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_GWEN_SRAM(fabric_sram{i}_gwen_o),')
-            print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CEN_SRAM(fabric_sram{i}_cen_o),')
-            print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CLK_SRAM(fabric_sram{i}_clk_o),')
-            print(f'        .Tile_{sram_coords}Y{sram_y_start+i*2}_CONFIGURED_top(configured_i),')
+                print(f'        .Tile_{loc}_D_SRAM{j}(fabric_sram{i}_d_o[{j}]),')
+            print(f'        .Tile_{loc}_GWEN_SRAM(fabric_sram{i}_gwen_o),')
+            print(f'        .Tile_{loc}_CEN_SRAM(fabric_sram{i}_cen_o),')
+            print(f'        .Tile_{loc}_CLK_SRAM(fabric_sram{i}_clk_o),')
+            print(f'        .Tile_{loc}_CONFIGURED_top(configured_i),')
 
         for i, loc in enumerate(EFUSE_LOC):
             print(f'        // eFuse {i}')
