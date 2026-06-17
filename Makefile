@@ -140,11 +140,15 @@ sim-view: ## View simulation waveforms in GTKWave
 ###
 
 tiles:
-	cd ip/fabulous-tiles/; PDK=${PDK} SCL=${SCL} TILE_LIBRARY=classic nix develop --command make all
+	cd ip/fabulous-tiles/; PDK=${PDK} SCL=${SCL} TILE_LIBRARY=${TILE_LIBRARY} nix develop --command make all
 .PHONY: tiles
 
+extra-tiles:
+	cd ip/extra-tiles/; PDK=${PDK} SCL=${SCL} TILE_LIBRARY=${TILE_LIBRARY} nix develop --command make all
+.PHONY: extra-tiles
+
 fabric:
-	cd ip/fabulous-fabrics/; PDK=${PDK} SCL=${SCL} TILE_LIBRARY=classic nix develop --command make ${FABRIC}
+	cd ip/fabulous-fabrics/; PDK=${PDK} SCL=${SCL} TILE_LIBRARY=${TILE_LIBRARY} nix develop --command make ${FABRIC}
 .PHONY: tiles
 
 

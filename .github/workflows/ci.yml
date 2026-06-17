@@ -58,9 +58,39 @@ jobs:
         run: |
           make tiles
 
+  extra-tiles:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        pdk: [gf180mcuD]
+        tile_library: [classic]
+        scl: [gf180mcu_as_sc_mcu7t3v3]
+    name: Extra Tiles (${{ matrix.tile_library }}/${{ matrix.pdk }}/${{ matrix.scl }})
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: 'true'
+      - name: Setup Nix
+        uses: ./.github/actions/setup_nix
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get the tile library hash
+        run: |
+          echo "EXTRA_TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Cache the tiles
+        uses: actions/cache@v5
+        id: cache
+        with:
+          path: ip/extra-tiles/tiles
+          key: cache-extra-tiles-${{ matrix.tile_library }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.EXTRA_TILE_LIBRARY_SHORT_HASH }}
+      - name: Implement the tiles
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          make tiles
+
   fabrics:
     runs-on: ubuntu-24.04
-    needs: [tiles]
+    needs: [tiles, extra-tiles]
     strategy:
       matrix:
         pdk: [gf180mcuD]
@@ -79,13 +109,26 @@ jobs:
         run: |
           echo "TILE_LIBRARY=$(echo "${{ matrix.fabric }}" | cut -d'_' -f1)" >> $GITHUB_ENV
           echo "TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD:ip/fabulous-tiles)" >> $GITHUB_ENV
-      - name: Restore the tiles
+          echo "EXTRA_TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Restore Tiles
         uses: actions/cache/restore@v5
         with:
           path: ip/fabulous-tiles/tiles
           key: cache-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.TILE_LIBRARY_SHORT_HASH }}
           fail-on-cache-miss: true
-      - name: Stitch the fabric
+      - name: Restore Extra Tiles
+        uses: actions/cache/restore@v5
+        with:
+          path: ip/extra-tiles/tiles
+          key: cache-extra-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.EXTRA_TILE_LIBRARY_SHORT_HASH }}
+          fail-on-cache-miss: true
+      - name: Cache the Fabric
+        uses: actions/cache@v5
+        id: cache
+        with:
+          path: ip/fabulous-fabrics/fabrics/${{ matrix.fabric }}/macro/${{ matrix.pdk }}/
+          key: cache-fabric-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
+      - name: Stitch the Fabric
         run: |
           make fabric
       - name: Upload Macro Folder
@@ -105,29 +148,21 @@ jobs:
         run: |
           cd ip/fabulous-fabrics; PDK=${{ matrix.pdk }} TILE_LIBRARY=${{ env.TILE_LIBRARY }} FABRIC=${{ matrix.fabric }} nix develop --command bash -c "cd tb; python3 fabric_tb.py"
 
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Define the Matrix
-        id: export-matrix
-        if: 
-        run: |
-          if ${{ github.repository == 'wafer-space/gf180mcu-project-template' }}; then
-            echo "matrix={\"slot\":['1x1', '0p5x1', '1x0p5', '0p5x0p5'],\"domain\":['5v','3v3'],\"include\": [{\"pad\": 'gf180mcu_fd_io', \"domain\": '5v'},{\"scl\": 'gf180mcu_fd_sc_mcu7t5v0', \"domain\": '5v'},{\"sram\": 'gf180mcu_fd_ip_sram', \"domain\": '5v'},{\"pad\": 'gf180mcu_ocd_io', \"domain\": '3v3'},{\"scl\": 'gf180mcu_as_sc_mcu7t3v3', \"domain\": '3v3'},{\"sram\": 'gf180mcu_ocd_ip_sram', \"domain\": '3v3'}]}" >> $GITHUB_OUTPUT
-          else
-            echo "matrix={\"slot\":['default'],\"sram\":['default'],\"pad\":['default'],\"scl\":['default']}" >> $GITHUB_OUTPUT
-          fi
-    outputs:
-      matrix: ${{ steps.export-matrix.outputs.matrix }}
   chip:
     runs-on: ubuntu-24.04
     name: Build the Chip
     needs:
-      - prepare
+      - fabrics
     strategy:
-      matrix: ${{fromJSON(needs.prepare.outputs.matrix)}}
+      matrix:
+        pdk: [gf180mcuD]
+        fabric: [classic_fabric_wsrun2]
+        scl: [gf180mcu_as_sc_mcu7t3v3]
+        slot: [default]
+        sram: [default]
+        pad: [default]
     steps:
-      - name: Set veriables
+      - name: Set variables
         run: |
           echo "SLOT=${{ matrix.slot }}" >> $GITHUB_ENV
           echo "SRAM=${{ matrix.sram }}" >> $GITHUB_ENV
@@ -141,7 +176,7 @@ jobs:
           remove-haskell: "true"
           remove-codeql: "true"
           remove-docker-images: "true"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Nix
         uses: ./.github/actions/setup_nix
         with:
@@ -156,6 +191,29 @@ jobs:
         run: |
           sudo du -hs /nix/store/* | sort -h | tail -n 10
           sudo tree /nix/store/*-librelane || true
+      - name: Get the tile library
+        run: |
+          echo "TILE_LIBRARY=$(echo "${{ matrix.fabric }}" | cut -d'_' -f1)" >> $GITHUB_ENV
+          echo "TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD:ip/fabulous-tiles)" >> $GITHUB_ENV
+          echo "EXTRA_TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Restore Tiles
+        uses: actions/cache/restore@v5
+        with:
+          path: ip/fabulous-tiles/tiles
+          key: cache-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.TILE_LIBRARY_SHORT_HASH }}
+          fail-on-cache-miss: true
+      - name: Restore Extra Tiles
+        uses: actions/cache/restore@v5
+        with:
+          path: ip/extra-tiles/tiles
+          key: cache-extra-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.EXTRA_TILE_LIBRARY_SHORT_HASH }}
+          fail-on-cache-miss: true
+      - name: Restore Fabric
+        uses: actions/cache/restore@v5
+        with:
+          path: ip/fabulous-fabrics/fabrics/${{ matrix.fabric }}/macro/${{ matrix.pdk }}/
+          key: cache-fabric-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
+          fail-on-cache-miss: true
       - name: Clone the PDK
         run: |
           nix develop --command make clone-pdk
@@ -176,13 +234,13 @@ jobs:
           cat librelane/runs/*/*-misc-reportmanufacturability/manufacturability.rpt >> $GITHUB_STEP_SUMMARY
       - name: Upload GDS
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.slot }}_gds
           path: final/gds/*
       - name: Upload image
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.slot }}_image
           path: final/render/*.png
