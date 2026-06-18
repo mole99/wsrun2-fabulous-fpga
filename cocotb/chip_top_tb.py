@@ -32,65 +32,65 @@ hdl_toplevel = "chip_top"
 tb_toplevel = "chip_top_tb"
 
 lookup = {
-    "X0Y1/A" : "fpga_PAD_0",
-    "X0Y1/B" : "fpga_PAD_1",
-    "X0Y1/C" : "fpga_PAD_2",
-    "X0Y1/D" : "fpga_PAD_3",
+    "X0Y1/A" : "fpga_PAD_47",
+    "X0Y1/B" : "fpga_PAD_46",
+    "X0Y1/C" : "fpga_PAD_45",
+    "X0Y1/D" : "fpga_PAD_44",
 
-    "X0Y2/A" : "fpga_PAD_4",
-    "X0Y2/B" : "fpga_PAD_5",
-    "X0Y2/C" : "fpga_PAD_6",
-    "X0Y2/D" : "fpga_PAD_7",
+    "X0Y2/A" : "fpga_PAD_43",
+    "X0Y2/B" : "fpga_PAD_42",
+    "X0Y2/C" : "fpga_PAD_41",
+    "X0Y2/D" : "fpga_PAD_40",
 
-    "X0Y3/A" : "fpga_PAD_8",
-    "X0Y3/B" : "fpga_PAD_9",
-    "X0Y3/C" : "fpga_PAD_10",
-    "X0Y3/D" : "fpga_PAD_11",
+    "X0Y3/A" : "fpga_PAD_39",
+    "X0Y3/B" : "fpga_PAD_38",
+    "X0Y3/C" : "fpga_PAD_37",
+    "X0Y3/D" : "fpga_PAD_36",
 
-    "X0Y4/A" : "fpga_PAD_12",
-    "X0Y4/B" : "fpga_PAD_13",
-    "X0Y4/C" : "fpga_PAD_14",
-    "X0Y4/D" : "fpga_PAD_15",
+    "X0Y4/A" : "fpga_PAD_35",
+    "X0Y4/B" : "fpga_PAD_34",
+    "X0Y4/C" : "fpga_PAD_33",
+    "X0Y4/D" : "fpga_PAD_32",
 
-    "X0Y5/A" : "fpga_PAD_16",
-    "X0Y5/B" : "fpga_PAD_17",
-    "X0Y5/C" : "fpga_PAD_18",
-    "X0Y5/D" : "fpga_PAD_19",
+    "X0Y5/A" : "fpga_PAD_31",
+    "X0Y5/B" : "fpga_PAD_30",
+    "X0Y5/C" : "fpga_PAD_29",
+    "X0Y5/D" : "fpga_PAD_28",
 
-    "X0Y6/A" : "fpga_PAD_20",
-    "X0Y6/B" : "fpga_PAD_21",
-    "X0Y6/C" : "fpga_PAD_22",
-    "X0Y6/D" : "fpga_PAD_23",
+    "X0Y6/A" : "fpga_PAD_27",
+    "X0Y6/B" : "fpga_PAD_26",
+    "X0Y6/C" : "fpga_PAD_25",
+    "X0Y6/D" : "fpga_PAD_24",
 
-    "X0Y7/A" : "fpga_PAD_24",
-    "X0Y7/B" : "fpga_PAD_25",
-    "X0Y7/C" : "fpga_PAD_26",
-    "X0Y7/D" : "fpga_PAD_27",
+    "X0Y7/A" : "fpga_PAD_23",
+    "X0Y7/B" : "fpga_PAD_22",
+    "X0Y7/C" : "fpga_PAD_21",
+    "X0Y7/D" : "fpga_PAD_20",
 
-    "X0Y8/A" : "fpga_PAD_28",
-    "X0Y8/B" : "fpga_PAD_29",
-    "X0Y8/C" : "fpga_PAD_30",
-    "X0Y8/D" : "fpga_PAD_31",
+    "X0Y8/A" : "fpga_PAD_19",
+    "X0Y8/B" : "fpga_PAD_18",
+    "X0Y8/C" : "fpga_PAD_17",
+    "X0Y8/D" : "fpga_PAD_16",
 
-    "X0Y9/A" : "fpga_PAD_32",
-    "X0Y9/B" : "fpga_PAD_33",
-    "X0Y9/C" : "fpga_PAD_34",
-    "X0Y9/D" : "fpga_PAD_35",
+    "X0Y9/A" : "fpga_PAD_15",
+    "X0Y9/B" : "fpga_PAD_14",
+    "X0Y9/C" : "fpga_PAD_13",
+    "X0Y9/D" : "fpga_PAD_12",
 
-    "X0Y10/A" : "fpga_PAD_36",
-    "X0Y10/B" : "fpga_PAD_37",
-    "X0Y10/C" : "fpga_PAD_38",
-    "X0Y10/D" : "fpga_PAD_39",
+    "X0Y10/A" : "fpga_PAD_11",
+    "X0Y10/B" : "fpga_PAD_10",
+    "X0Y10/C" : "fpga_PAD_9",
+    "X0Y10/D" : "fpga_PAD_8",
 
-    "X0Y11/A" : "fpga_PAD_40",
-    "X0Y11/B" : "fpga_PAD_41",
-    "X0Y11/C" : "fpga_PAD_42",
-    "X0Y11/D" : "fpga_PAD_43",
+    "X0Y11/A" : "fpga_PAD_7",
+    "X0Y11/B" : "fpga_PAD_6",
+    "X0Y11/C" : "fpga_PAD_5",
+    "X0Y11/D" : "fpga_PAD_4",
 
-    "X0Y12/A" : "fpga_PAD_44",
-    "X0Y12/B" : "fpga_PAD_45",
-    "X0Y12/C" : "fpga_PAD_46",
-    "X0Y12/D" : "fpga_PAD_47",
+    "X0Y12/A" : "fpga_PAD_3",
+    "X0Y12/B" : "fpga_PAD_2",
+    "X0Y12/C" : "fpga_PAD_1",
+    "X0Y12/D" : "fpga_PAD_0",
 }
 
 # Note! There's a character limit for Icarus readmemh's path. It will start dropping the first characters.
@@ -114,7 +114,7 @@ trigger_slot = {
     'flash1_slot1': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot0/trigger_slot0.hex").resolve(),
 }
 
-enabled = trigger_slot
+enabled = counter_top
 
 class PCF:
     "A class to read a PCF file and access the signals within cocotb."
@@ -355,7 +355,7 @@ async def test_counter_top(dut):
     NUM_CYCLES = 123
     await ClockCycles(clock, NUM_CYCLES)
 
-    assert pcf.get("all").to_unsigned() == NUM_CYCLES-1
+    assert pcf.get("c").to_unsigned() == NUM_CYCLES
 
     logger.info("Done!")
 
