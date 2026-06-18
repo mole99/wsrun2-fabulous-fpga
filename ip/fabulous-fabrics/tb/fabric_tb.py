@@ -14,24 +14,31 @@ from cocotb_tools.runner import get_runner
 from cocotb.types import LogicArray, Logic
 
 proj_path = Path(__file__).resolve().parent
-fabric = os.getenv("FABRIC", "classic_fabric_10x10")
+fabric = os.getenv("FABRIC", "classic_fabric_wsrun2")
 
 if __name__ == "__main__":
 
     sim = os.getenv("SIM", "icarus")
     pdk_root = os.getenv("PDK_ROOT", Path("~/.ciel").expanduser())
-    pdk = os.getenv("PDK", "ihp-sg13g2")
-    scl = os.getenv("SCL", "sg13g2_stdcell")
+    pdk = os.getenv("PDK", "gf180mcuD")
+    scl = os.getenv("SCL", "gf180mcu_fd_sc_mcu7t5v0")
     gl = os.getenv("GL", None)
     emulation = os.getenv("EMULATION", False)
     tile_library = os.getenv("TILE_LIBRARY", "classic")
     
-    tiles_path = Path(proj_path / ".." / "ip" / "fabulous-tiles")
+    tiles_path = Path(proj_path / "../../.." / "ip" / "fabulous-tiles")
     primitives_path = Path(tiles_path) / "primitives"
     tile_library_path = Path(tiles_path) / "tiles" / tile_library
 
+    extra_tiles_path = Path(proj_path / "../../.." / "ip" / "extra-tiles")
+    extra_primitives_path = Path(extra_tiles_path) / "primitives"
+    extra_tile_library_path = Path(extra_tiles_path) / "tiles" / tile_library
+
     primitives_files = list(primitives_path.glob('**/fabulous/*.v'))
     tile_files = list(tile_library_path.glob(f'**/macro/{pdk}/fabulous/*.v'))
+    
+    primitives_files += list(extra_primitives_path.glob('**/fabulous/*.v'))
+    tile_files += list(extra_tile_library_path.glob(f'**/macro/{pdk}/fabulous/*.v'))
 
     #print(f"Primitive sources: {primitives_files}")
     #print(f"Tile sources: {tile_files}")
