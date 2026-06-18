@@ -114,7 +114,7 @@ trigger_slot = {
     'flash1_slot1': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot0/trigger_slot0.hex").resolve(),
 }
 
-enabled = all_ones
+enabled = trigger_slot
 
 class PCF:
     "A class to read a PCF file and access the signals within cocotb."
@@ -363,6 +363,11 @@ async def test_counter_top(dut):
 async def test_trigger_slot(dut):
     """Load bitstream that loads another bitstream"""
 
+    testname = "trigger_slot"
+
+    pcf = PCF(dut, proj_path / f"../ip/fabulous-fabrics/fabrics/{fabric}/constraints.pcf", lookup)
+    pcf.write_gtkw(f"{testname}.gtkw", ["clk1", "a"])
+
     # Create a logger for this testbench
     logger = logging.getLogger("my_testbench")
 
@@ -380,23 +385,27 @@ async def test_trigger_slot(dut):
 
     logger.info("Running the test...")
     
+    # Start a clock on clk1
+    clock = pcf.get_raw("clk1", "OUT")
+    cocotb.start_soon(Clock(clock, 10, 'ns').start())
+    
     # Wait for done
     await FallingEdge(dut.config_busy_PAD)
     await ClockCycles(dut.clk_PAD, 1)
 
-    assert (dut.fpga_PAD.value == 0)
+    assert pcf.get("a").to_unsigned() == LogicArray.from_unsigned(0, len(pcf.get("a")))
 
     # Wait for done
     await FallingEdge(dut.config_busy_PAD)
     await ClockCycles(dut.clk_PAD, 1)
 
-    assert (dut.fpga_PAD.value == (1<<48)-1)
+    assert pcf.get("a").to_unsigned() == LogicArray.from_signed(-1, len(pcf.get("a")))
 
     # Wait for done
     await FallingEdge(dut.config_busy_PAD)
     await ClockCycles(dut.clk_PAD, 1)
 
-    assert (dut.fpga_PAD.value == 0)
+    assert pcf.get("a").to_unsigned() == LogicArray.from_unsigned(0, len(pcf.get("a")))
 
     logger.info("Done!")
 
