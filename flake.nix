@@ -34,6 +34,15 @@
             nix-eda.overlays.default
             devshell.overlays.default
             librelane.overlays.default
+            (nix-eda.composePythonOverlay (
+              pkgs': pkgs: pypkgs': pypkgs:
+              let
+                callPythonPackage = lib.callPackageWith (pkgs' // pypkgs');
+              in
+              {
+                cocotbext-spi = callPythonPackage ./nix/cocotbext-spi.nix { };
+              }
+            ))
           ];
         }
       );
@@ -69,6 +78,8 @@
               ps: with ps; [
                 # Verification
                 cocotb
+                cocotbext-spi
+                pytest
 
                 # For KLayout Python DRC runner
                 docopt

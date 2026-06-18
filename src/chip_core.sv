@@ -47,12 +47,24 @@ module chip_core #(
     output wire [NUM_FPGA_PADS-1:0] fpga_pd    // Pull-down
 );
 
+    // Power-on-reset circuit
+    wire porb, por, npor;
+    simple_por por_inst (
+    `ifdef USE_POWER_PINS
+        .VDD(VDD),
+        .VSS(VSS),
+    `endif
+        .porb(porb),
+        .por(por)
+    );
+    assign npor = porb;
+
     // Reset with asynchronous assertion and synchronous relase
     logic [1:0] rst_nd;
     logic rst_n_sync;
     
     always_ff @(posedge clk, negedge rst_n) begin
-        if (!rst_n) begin
+        if (!(rst_n && npor)) begin
             rst_nd <= '0;
         end else begin
             rst_nd[0] <= 1'b1;
@@ -281,8 +293,8 @@ module chip_core #(
 
     // TODO adjust BITSTREAM_LENGTH_WORDS
     fabric_spi_controller #(
-        .BITSTREAM_LENGTH_WORDS (32'hA92),
-        .SLOT_OFFSET_WORDS      (32'h1000),
+        .BITSTREAM_LENGTH_WORDS (32'h1FB6),
+        .SLOT_OFFSET_WORDS      (32'h2000),
         .NUM_SLOTS              (16)
     ) fabric_spi_controller (
         .clk_i  (clk),
@@ -357,19 +369,6 @@ module chip_core #(
         .fabric_warmboot_boot_o,
         .fabric_warmboot_slot_o
     );
-    
-    wire porb, por, npor;
-
-    // Power-on-reset circuit
-    simple_por por_inst (
-    `ifdef USE_POWER_PINS
-        .VDD(VDD),
-        .VSS(VSS),
-    `endif
-        .porb(porb),
-        .por(por)
-    );
-    assign npor = porb;
 
 endmodule
 
