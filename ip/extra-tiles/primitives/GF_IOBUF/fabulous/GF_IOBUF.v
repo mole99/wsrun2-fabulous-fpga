@@ -49,10 +49,10 @@ module GF_IOBUF #(
     assign EN_REG = ConfigBits[0];
     assign IN_REG = ConfigBits[1];
     assign OUT_REG = ConfigBits[2];
-    assign CS = ConfigBits[4];
-    assign SL = ConfigBits[5];
-    assign PU = ConfigBits[6];
-    assign PD = ConfigBits[7];
+    assign CS = ConfigBits[3];
+    assign SL = ConfigBits[4];
+    assign PU = ConfigBits[5];
+    assign PD = ConfigBits[6];
 
     // Functionality
     logic EN_q, IN_q, OUT_top_q;
