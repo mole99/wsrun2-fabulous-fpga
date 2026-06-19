@@ -138,6 +138,12 @@ jobs:
           name: ${{ matrix.fabric }}_${{ matrix.pdk }}_${{ matrix.scl }}
           path: ip/fabulous-fabrics/fabrics/${{ matrix.fabric }}/macro/${{ matrix.pdk }}/
           include-hidden-files: true
+      - name: Cache the User Designs
+        uses: actions/cache@v5
+        id: cache
+        with:
+          path: ip/fabulous-fabrics/user_designs/
+          key: cache-user-designs-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
       - name: Implement the User Designs
         run: |
           cd ip/fabulous-fabrics/user_designs; PDK=${{ matrix.pdk }} TILE_LIBRARY=${{ env.TILE_LIBRARY }} FABRIC=${{ matrix.fabric }} nix develop --command make all
@@ -216,12 +222,36 @@ jobs:
           path: ip/fabulous-fabrics/fabrics/${{ matrix.fabric }}/macro/${{ matrix.pdk }}/
           key: cache-fabric-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
           fail-on-cache-miss: true
+      - name: Restore User Designs
+        uses: actions/cache/restore@v5
+        with:
+          path: ip/fabulous-fabrics/user_designs/
+          key: cache-user-designs-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
+          fail-on-cache-miss: true
       - name: Clone the PDK
         run: |
           nix develop --command make clone-pdk
-      - name: Run RTL simulation
+      - name: Run RTL simulation (all_ones)
         run: |
-          nix develop --command make sim
+          TESTCASE=all_ones nix develop --command make sim
+          # cocotb also returns 0 upon failure
+          # check the simulation results
+          ! grep failure cocotb/sim_build/results.xml
+      - name: Run RTL simulation (all_zeros)
+        run: |
+          TESTCASE=all_zeros nix develop --command make sim
+          # cocotb also returns 0 upon failure
+          # check the simulation results
+          ! grep failure cocotb/sim_build/results.xml
+      - name: Run RTL simulation (top_counter)
+        run: |
+          TESTCASE=top_counter nix develop --command make sim
+          # cocotb also returns 0 upon failure
+          # check the simulation results
+          ! grep failure cocotb/sim_build/results.xml
+      - name: Run RTL simulation (trigger_slot)
+        run: |
+          TESTCASE=trigger_slot nix develop --command make sim
           # cocotb also returns 0 upon failure
           # check the simulation results
           ! grep failure cocotb/sim_build/results.xml
