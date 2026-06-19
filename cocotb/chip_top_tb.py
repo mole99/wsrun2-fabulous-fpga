@@ -93,28 +93,33 @@ lookup = {
     "X0Y12/D" : "fpga_PAD_0",
 }
 
-# Note! There's a character limit for Icarus readmemh's path. It will start dropping the first characters.
-all_ones = {
-    'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_ones/all_ones.hex").resolve(),
-    'flash1_slot1': "",
+
+testcase = os.getenv("TESTCASE", "all_ones")
+
+testcases = {
+    # Note! There's a character limit for Icarus readmemh's path. It will start dropping the first characters.
+    "all_ones": {
+        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_ones/all_ones.hex").resolve(),
+        'flash1_slot1': "",
+    },
+
+    "all_zeros": {
+        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_zeros/all_zeros.hex").resolve(),
+        'flash1_slot1': "",
+    },
+
+    "counter_top": {
+        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/counter_top/counter_top.hex").resolve(),
+        'flash1_slot1': "",
+    },
+
+    "trigger_slot": {
+        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot1/trigger_slot1.hex").resolve(),
+        'flash1_slot1': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot0/trigger_slot0.hex").resolve(),
+    },
 }
 
-all_zeros = {
-    'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_zeros/all_zeros.hex").resolve(),
-    'flash1_slot1': "",
-}
-
-counter_top = {
-    'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/counter_top/counter_top.hex").resolve(),
-    'flash1_slot1': "",
-}
-
-trigger_slot = {
-    'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot1/trigger_slot1.hex").resolve(),
-    'flash1_slot1': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot0/trigger_slot0.hex").resolve(),
-}
-
-enabled = counter_top
+enabled = testcases[testcase]
 
 class PCF:
     "A class to read a PCF file and access the signals within cocotb."
@@ -240,7 +245,7 @@ async def start_up(dut):
     await reset(dut.rst_n_PAD)
 
 
-@cocotb.test(skip=enabled!=all_ones)
+@cocotb.test(skip=testcase!="all_ones")
 async def test_all_ones(dut):
     """Load bitstream that sets all ones"""
 
@@ -277,7 +282,7 @@ async def test_all_ones(dut):
 
     logger.info("Done!")
 
-@cocotb.test(skip=enabled!=all_zeros)
+@cocotb.test(skip=testcase!="all_zeros")
 async def test_all_zeros(dut):
     """Load bitstream that sets all zeros"""
 
@@ -314,7 +319,7 @@ async def test_all_zeros(dut):
 
     logger.info("Done!")
 
-@cocotb.test(skip=enabled!=counter_top)
+@cocotb.test(skip=testcase!="counter_top")
 async def test_counter_top(dut):
     """Load bitstream that counts"""
 
@@ -359,7 +364,7 @@ async def test_counter_top(dut):
 
     logger.info("Done!")
 
-@cocotb.test(skip=enabled!=trigger_slot)
+@cocotb.test(skip=testcase!="trigger_slot")
 async def test_trigger_slot(dut):
     """Load bitstream that loads another bitstream"""
 
@@ -384,10 +389,6 @@ async def test_trigger_slot(dut):
     await start_up(dut)
 
     logger.info("Running the test...")
-    
-    # Start a clock on clk1
-    clock = pcf.get_raw("clk1", "OUT")
-    cocotb.start_soon(Clock(clock, 10, 'ns').start())
     
     # Wait for done
     await FallingEdge(dut.config_busy_PAD)

@@ -293,8 +293,8 @@ module chip_core #(
 
     // TODO adjust BITSTREAM_LENGTH_WORDS
     fabric_spi_controller #(
-        .BITSTREAM_LENGTH_WORDS (32'h1FB6),
-        .SLOT_OFFSET_WORDS      (32'h2000),
+        .BITSTREAM_LENGTH_WORDS (32'hA92),
+        .SLOT_OFFSET_WORDS      (32'h1000),
         .NUM_SLOTS              (16)
     ) fabric_spi_controller (
         .clk_i  (clk),
