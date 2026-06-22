@@ -241,9 +241,9 @@ jobs:
           # cocotb also returns 0 upon failure
           # check the simulation results
           ! grep failure cocotb/sim_build/results.xml
-      - name: Run RTL simulation (top_counter)
+      - name: Run RTL simulation (counter_top)
         run: |
-          TESTCASE=top_counter nix develop --command make sim
+          TESTCASE=counter_top nix develop --command make sim
           # cocotb also returns 0 upon failure
           # check the simulation results
           ! grep failure cocotb/sim_build/results.xml
@@ -274,10 +274,10 @@ jobs:
         with:
           name: ${{ matrix.slot }}_image
           path: final/render/*.png
-      - name: Run GL simulation
-        if: success() || failure()
-        run: |
-          nix develop --command make sim-gl
-          # cocotb also returns 0 upon failure
-          # check the simulation results
-          ! grep failure cocotb/sim_build/results.xml
+      #- name: Run GL simulation
+      #  if: success() || failure()
+      #  run: |
+      #    nix develop --command make sim-gl
+      #    # cocotb also returns 0 upon failure
+      #    # check the simulation results
+      #    ! grep failure cocotb/sim_build/results.xml

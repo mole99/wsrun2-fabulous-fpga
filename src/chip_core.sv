@@ -63,8 +63,12 @@ module chip_core #(
     logic [1:0] rst_nd;
     logic rst_n_sync;
     
-    always_ff @(posedge clk, negedge rst_n) begin
-        if (!(rst_n && npor)) begin
+    
+    wire rst_n_and_npor;
+    assign rst_n_and_npor = rst_n && npor;
+    
+    always_ff @(posedge clk, negedge rst_n_and_npor) begin
+        if (!rst_n_and_npor) begin
             rst_nd <= '0;
         end else begin
             rst_nd[0] <= 1'b1;
