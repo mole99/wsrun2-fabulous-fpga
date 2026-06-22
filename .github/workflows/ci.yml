@@ -109,7 +109,7 @@ jobs:
         run: |
           echo "TILE_LIBRARY=$(echo "${{ matrix.fabric }}" | cut -d'_' -f1)" >> $GITHUB_ENV
           echo "TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD:ip/fabulous-tiles)" >> $GITHUB_ENV
-          echo "EXTRA_TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "REPO_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Restore Tiles
         uses: actions/cache/restore@v5
         with:
@@ -120,13 +120,13 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: ip/extra-tiles/tiles
-          key: cache-extra-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.EXTRA_TILE_LIBRARY_SHORT_HASH }}
+          key: cache-extra-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.REPO_SHORT_HASH }}
           fail-on-cache-miss: true
       - name: Cache the Fabric
         uses: actions/cache@v5
         with:
           path: ip/fabulous-fabrics/fabrics/${{ matrix.fabric }}/macro/${{ matrix.pdk }}/
-          key: cache-fabric-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
+          key: cache-fabric-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.REPO_SHORT_HASH }}
       - name: Stitch the Fabric
         run: |
           make fabric
@@ -141,7 +141,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ip/fabulous-fabrics/user_designs/
-          key: cache-user-designs-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
+          key: cache-user-designs-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.REPO_SHORT_HASH }}
       - name: Implement the User Designs
         run: |
           cd ip/fabulous-fabrics/user_designs; PDK=${{ matrix.pdk }} TILE_LIBRARY=${{ env.TILE_LIBRARY }} FABRIC=${{ matrix.fabric }} nix develop --command make all
@@ -201,7 +201,7 @@ jobs:
         run: |
           echo "TILE_LIBRARY=$(echo "${{ matrix.fabric }}" | cut -d'_' -f1)" >> $GITHUB_ENV
           echo "TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD:ip/fabulous-tiles)" >> $GITHUB_ENV
-          echo "EXTRA_TILE_LIBRARY_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "REPO_SHORT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Restore Tiles
         uses: actions/cache/restore@v5
         with:
@@ -212,19 +212,19 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: ip/extra-tiles/tiles
-          key: cache-extra-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.EXTRA_TILE_LIBRARY_SHORT_HASH }}
+          key: cache-extra-tiles-${{ env.TILE_LIBRARY }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.REPO_SHORT_HASH }}
           fail-on-cache-miss: true
       - name: Restore Fabric
         uses: actions/cache/restore@v5
         with:
           path: ip/fabulous-fabrics/fabrics/${{ matrix.fabric }}/macro/${{ matrix.pdk }}/
-          key: cache-fabric-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
+          key: cache-fabric-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.REPO_SHORT_HASH }}
           fail-on-cache-miss: true
       - name: Restore User Designs
         uses: actions/cache/restore@v5
         with:
           path: ip/fabulous-fabrics/user_designs/
-          key: cache-user-designs-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}
+          key: cache-user-designs-${{ matrix.fabric }}-${{ matrix.pdk }}-${{ matrix.scl }}-${{ env.REPO_SHORT_HASH }}
           fail-on-cache-miss: true
       - name: Clone the PDK
         run: |
