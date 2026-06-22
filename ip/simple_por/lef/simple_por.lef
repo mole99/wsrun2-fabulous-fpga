@@ -8,12 +8,16 @@ MACRO simple_por
   ORIGIN 0.000 0.000 ;
   SIZE 125.780 BY 43.580 ;
   PIN VDD
+    DIRECTION INOUT ;
+    USE POWER ;
     PORT
       LAYER Metal5 ;
         RECT 0.120 39.570 19.815 43.570 ;
     END
   END VDD
   PIN VSS
+    DIRECTION INOUT ;
+    USE GROUND ;
     PORT
       LAYER Metal5 ;
         RECT 0.120 29.420 20.015 33.420 ;
