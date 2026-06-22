@@ -98,24 +98,26 @@ testcase = os.getenv("TESTCASE", "all_ones")
 
 testcases = {
     # Note! There's a character limit for Icarus readmemh's path. It will start dropping the first characters.
+    # I'm using relative paths here (from the sim_build directory) as with absolute paths the character
+    # limit is reached in GitHub actions.
     "all_ones": {
-        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_ones/all_ones.hex").resolve(),
+        'flash1_slot0': f"../../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_ones/all_ones.hex",
         'flash1_slot1': "",
     },
 
     "all_zeros": {
-        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_zeros/all_zeros.hex").resolve(),
+        'flash1_slot0': f"../../ip/fabulous-fabrics/user_designs/designs/{tile_library}/all_zeros/all_zeros.hex",
         'flash1_slot1': "",
     },
 
     "counter_top": {
-        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/counter_top/counter_top.hex").resolve(),
+        'flash1_slot0': f"../../ip/fabulous-fabrics/user_designs/designs/{tile_library}/counter_top/counter_top.hex",
         'flash1_slot1': "",
     },
 
     "trigger_slot": {
-        'flash1_slot0': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot1/trigger_slot1.hex").resolve(),
-        'flash1_slot1': (proj_path / f"../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot0/trigger_slot0.hex").resolve(),
+        'flash1_slot0': f"../../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot1/trigger_slot1.hex",
+        'flash1_slot1': f"../../ip/fabulous-fabrics/user_designs/designs/{tile_library}/trigger_slot0/trigger_slot0.hex",
     },
 }
 
