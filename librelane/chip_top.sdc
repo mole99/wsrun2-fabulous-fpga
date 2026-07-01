@@ -85,3 +85,10 @@ if { [info exists ::env(OPENLANE_SDC_IDEAL_CLOCKS)] && $::env(OPENLANE_SDC_IDEAL
     set_propagated_clock [all_clocks]
 }
 
+# False paths
+
+set_false_path -setup -hold -from [get_ports {rst_n_PAD}]
+
+set_false_path -setup -hold -from [get_ports {fpga_mode_PAD}]
+
+set_false_path -setup -hold -through [get_ports {fpga_PAD[*]}]

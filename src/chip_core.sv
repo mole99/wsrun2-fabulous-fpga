@@ -48,7 +48,8 @@ module chip_core #(
 );
 
     // Power-on-reset circuit
-    wire porb, por, npor;
+    // TODO: at 3.3V it takes seconds...
+    /*wire porb, por, npor;
     simple_por por_inst (
     `ifdef USE_POWER_PINS
         .VDD(VDD),
@@ -57,18 +58,17 @@ module chip_core #(
         .porb(porb),
         .por(por)
     );
-    assign npor = porb;
+    assign npor = porb;*/
 
     // Reset with asynchronous assertion and synchronous relase
     logic [1:0] rst_nd;
     logic rst_n_sync;
     
+    //wire rst_n_and_npor;
+    //assign rst_n_and_npor = rst_n && npor;
     
-    wire rst_n_and_npor;
-    assign rst_n_and_npor = rst_n && npor;
-    
-    always_ff @(posedge clk, negedge rst_n_and_npor) begin
-        if (!rst_n_and_npor) begin
+    always_ff @(posedge clk, negedge rst_n) begin
+        if (!rst_n) begin
             rst_nd <= '0;
         end else begin
             rst_nd[0] <= 1'b1;
@@ -357,7 +357,7 @@ module chip_core #(
         .sys_reset_i    (fabric_config_busy),
         
         // Power on reset
-        .npor_i (npor),
+        //.npor_i (npor),
         
         // I/Os West
         .io_west_in_i  (fabric_io_west_in_i),

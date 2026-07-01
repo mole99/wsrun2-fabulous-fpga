@@ -3,17 +3,18 @@ from contextlib import redirect_stdout
 FABRIC_NAME = "classic_fabric_wsrun2"
 
 COLUMNS = 9
-ROWS = 14
+ROWS = 15
 
 FABRIC_NUM_IO_WEST = 48
+IO_LOC = [f"X0Y{i}" for i in range(2, (FABRIC_NUM_IO_WEST//4)+2)]
 BELS_PER_IO_TILE = ['A', 'B', 'C', 'D']
 
-NUM_SRAM = 12
+NUM_SRAM = 13
 SRAM_LOC = [f"X8Y{i}" for i in range(1, NUM_SRAM+1)]
 SRAM_WIDTH = 8
 SRAM_ADDR_BITS = 10
 
-EFUSE_LOC = ["X2Y13", "X6Y13"]
+EFUSE_LOC = [] #["X2Y13", "X6Y13"]
 
 with open('fabric_wrapper.sv', 'w') as f:
     with redirect_stdout(f):
@@ -37,8 +38,8 @@ with open('fabric_wrapper.sv', 'w') as f:
         print("""    input                                configured_i,\n""")
         print("""    input                                sys_reset_i,\n""")
 
-        print(f'    // Power on reset')
-        print("""    input                                npor_i,\n""")
+        #print(f'    // Power on reset')
+        #print("""    input                                npor_i,\n""")
 
         # I/Os
         print(f'    // I/Os West')
@@ -93,16 +94,15 @@ with open('fabric_wrapper.sv', 'w') as f:
         # I/Os
         print(f"""        // West I/Os""")
         num_bels = len(BELS_PER_IO_TILE)
-        IO_WEST_OFFSET = 1
-        for i in range(IO_WEST_OFFSET,(FABRIC_NUM_IO_WEST//num_bels)+1):
+        for i, loc in enumerate(IO_LOC):
             for j, bel in enumerate(BELS_PER_IO_TILE):
-                print(f"""        .Tile_X0Y{i}_{bel}_OUT_top(io_west_in_i[{FABRIC_NUM_IO_WEST-1-((i-IO_WEST_OFFSET)*num_bels+j)}]),
-        .Tile_X0Y{i}_{bel}_IN_top(io_west_out_o[{FABRIC_NUM_IO_WEST-1-((i-IO_WEST_OFFSET)*num_bels+j)}]),
-        .Tile_X0Y{i}_{bel}_EN_top(io_west_oe_o[{FABRIC_NUM_IO_WEST-1-((i-IO_WEST_OFFSET)*num_bels+j)}]),
-        .Tile_X0Y{i}_{bel}_CS_top(io_west_cs_o[{FABRIC_NUM_IO_WEST-1-((i-IO_WEST_OFFSET)*num_bels+j)}]),
-        .Tile_X0Y{i}_{bel}_SL_top(io_west_sl_o[{FABRIC_NUM_IO_WEST-1-((i-IO_WEST_OFFSET)*num_bels+j)}]),
-        .Tile_X0Y{i}_{bel}_PU_top(io_west_pu_o[{FABRIC_NUM_IO_WEST-1-((i-IO_WEST_OFFSET)*num_bels+j)}]),
-        .Tile_X0Y{i}_{bel}_PD_top(io_west_pd_o[{FABRIC_NUM_IO_WEST-1-((i-IO_WEST_OFFSET)*num_bels+j)}]),\n""")
+                print(f"""        .Tile_{loc}_{bel}_OUT_top(io_west_in_i[{FABRIC_NUM_IO_WEST-1-(i*num_bels+j)}]),
+        .Tile_{loc}_{bel}_IN_top(io_west_out_o[{FABRIC_NUM_IO_WEST-1-(i*num_bels+j)}]),
+        .Tile_{loc}_{bel}_EN_top(io_west_oe_o[{FABRIC_NUM_IO_WEST-1-(i*num_bels+j)}]),
+        .Tile_{loc}_{bel}_CS_top(io_west_cs_o[{FABRIC_NUM_IO_WEST-1-(i*num_bels+j)}]),
+        .Tile_{loc}_{bel}_SL_top(io_west_sl_o[{FABRIC_NUM_IO_WEST-1-(i*num_bels+j)}]),
+        .Tile_{loc}_{bel}_PU_top(io_west_pu_o[{FABRIC_NUM_IO_WEST-1-(i*num_bels+j)}]),
+        .Tile_{loc}_{bel}_PD_top(io_west_pd_o[{FABRIC_NUM_IO_WEST-1-(i*num_bels+j)}]),\n""")
 
         # SYS_RESET
         print(f"""        // SYS_RESET""")
@@ -116,6 +116,17 @@ with open('fabric_wrapper.sv', 'w') as f:
         .Tile_{warmboot_coords}_SLOT_top1(fabric_warmboot_slot_o[1]),
         .Tile_{warmboot_coords}_SLOT_top2(fabric_warmboot_slot_o[2]),
         .Tile_{warmboot_coords}_SLOT_top3(fabric_warmboot_slot_o[3]),\n""")
+
+        for i, loc in enumerate(EFUSE_LOC):
+            print(f'        // eFuse {i}')
+            print(f'        .Tile_{loc}_EFUSE_A_CLK_top(fabric_efuse{i}_clk_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_RST_top(fabric_efuse{i}_rst_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_CLK_top(fabric_efuse{i}_spi_clk_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_CSN_top(fabric_efuse{i}_spi_csn_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_MISO_top(fabric_efuse{i}_spi_miso_i),')
+            print(f'        .Tile_{loc}_EFUSE_A_SPI_MOSI_top(fabric_efuse{i}_spi_mosi_o),')
+            print(f'        .Tile_{loc}_EFUSE_A_CONFIGURED_top(configured_i),')
+        print('')
 
         # SRAM
         for i, loc in enumerate(SRAM_LOC):
@@ -131,21 +142,11 @@ with open('fabric_wrapper.sv', 'w') as f:
             print(f'        .Tile_{loc}_GWEN_SRAM(fabric_sram{i}_gwen_o),')
             print(f'        .Tile_{loc}_CEN_SRAM(fabric_sram{i}_cen_o),')
             print(f'        .Tile_{loc}_CLK_SRAM(fabric_sram{i}_clk_o),')
-            print(f'        .Tile_{loc}_CONFIGURED_top(configured_i),')
 
-        for i, loc in enumerate(EFUSE_LOC):
-            print(f'        // eFuse {i}')
-            print(f'        .Tile_{loc}_EFUSE_A_CLK_top(fabric_efuse{i}_clk_o),')
-            print(f'        .Tile_{loc}_EFUSE_A_RST_top(fabric_efuse{i}_rst_o),')
-            print(f'        .Tile_{loc}_EFUSE_A_SPI_CLK_top(fabric_efuse{i}_spi_clk_o),')
-            print(f'        .Tile_{loc}_EFUSE_A_SPI_CSN_top(fabric_efuse{i}_spi_csn_o),')
-            print(f'        .Tile_{loc}_EFUSE_A_SPI_MISO_top(fabric_efuse{i}_spi_miso_i),')
-            print(f'        .Tile_{loc}_EFUSE_A_SPI_MOSI_top(fabric_efuse{i}_spi_mosi_o),')
-            
-            if (i==len(EFUSE_LOC)-1):
-                print(f'        .Tile_{loc}_EFUSE_A_CONFIGURED_top(configured_i)')
+            if (i==len(SRAM_LOC)-1):
+                print(f'        .Tile_{loc}_CONFIGURED_top(configured_i)')
             else:
-                print(f'        .Tile_{loc}_EFUSE_A_CONFIGURED_top(configured_i),')
+                print(f'        .Tile_{loc}_CONFIGURED_top(configured_i),')
             print('')
 
         print("    );\n")

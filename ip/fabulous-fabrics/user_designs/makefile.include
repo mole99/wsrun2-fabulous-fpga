@@ -2,7 +2,7 @@
 PDK 			?= gf180mcuD
 FABRIC 			?= classic_fabric_wsrun2
 TILE_LIBRARY		?= classic
-FABULOUS_ROOT 		?= $(abspath ../../../../fabrics/$(FABRIC)/macro/$(PDK)/fabulous)
+FABULOUS_ROOT 		?= $(abspath ../../../fabrics/$(FABRIC)/macro/$(PDK)/fabulous)
 PCF_CONSTRAINTS 		?= $(abspath $(FABULOUS_ROOT)/../../../constraints.pcf)
 TOP 			?= top_wrapper
 #CORNER			?= nom_typ_1p20V_25C

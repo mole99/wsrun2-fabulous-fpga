@@ -1,5 +1,6 @@
 FabricBegin,,,,,,,,,
 NW_GF_term,N_term_single,N_term_single,N_term_RegFile,N_term_single,N_term_single,N_term_single,N_term_single,NE_term
+W_GF_term_single,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,E_GF_SRAM_single
 W_GF_IO4_DDR,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,E_GF_SRAM_single
 W_GF_IO4_DDR,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,E_GF_SRAM_single
 W_GF_IO4_DDR,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,E_GF_SRAM_single
@@ -12,7 +13,7 @@ W_GF_IO4_DDR,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha
 W_GF_IO4_DDR,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,E_GF_SRAM_single
 W_GF_IO4_DDR,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,E_GF_SRAM_single
 W_GF_IO4_DDR,LUT4x8_ha,LUT4x8_ha,RegFile,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,LUT4x8_ha,E_GF_SRAM_single
-SW_GF_term,S_WARMBOOT,S_EFUSE,S_term_RegFile,S_term_single,S_term_single,S_EFUSE,S_term_single,SE_term
+SW_GF_term,S_WARMBOOT,S_term_single,S_term_RegFile,S_term_single,S_term_single,S_term_single,S_term_single,SE_term
 FabricEnd,,,,,,,,,
 ,,,,,,,,,
 ParametersBegin,,,,,,,,,
@@ -44,6 +45,7 @@ Tile,../../../../ip/fabulous-tiles/tiles/classic/S_term_RegFile/S_term_RegFile.c
 ,,,,,,,,,
 Tile,../../../../ip/extra-tiles/tiles/classic/NW_GF_term/NW_GF_term.csv,,,,,,,,
 Tile,../../../../ip/extra-tiles/tiles/classic/SW_GF_term/SW_GF_term.csv,,,,,,,,
+Tile,../../../../ip/extra-tiles/tiles/classic/W_GF_term_single/W_GF_term_single.csv,,,,,,,,
 Tile,../../../../ip/extra-tiles/tiles/classic/W_GF_IO4/W_GF_IO4.csv,,,,,,,,
 Tile,../../../../ip/extra-tiles/tiles/classic/W_GF_IO4_DDR/W_GF_IO4_DDR.csv,,,,,,,,
 Tile,../../../../ip/extra-tiles/tiles/classic/S_EFUSE/S_EFUSE.csv,,,,,,,,

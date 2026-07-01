@@ -14,7 +14,8 @@ define_pdn_grid \
       i_chip_core.fabric_wrapper.sram_8 \
       i_chip_core.fabric_wrapper.sram_9 \
       i_chip_core.fabric_wrapper.sram_10 \
-      i_chip_core.fabric_wrapper.sram_11" \
+      i_chip_core.fabric_wrapper.sram_11 \
+      i_chip_core.fabric_wrapper.sram_12" \
     -name sram_macros_WE \
     -starts_with POWER \
     -halo "$::env(PDN_HORIZONTAL_HALO) $::env(PDN_VERTICAL_HALO)"
@@ -51,22 +52,22 @@ add_pdn_stripe \
     -number_of_straps 11
 
 # soc sram grid
-define_pdn_grid \
-    -macro \
-    -instances i_chip_core.por_inst \
-    -name por_grid \
-    -starts_with POWER
+#define_pdn_grid \
+#    -macro \
+#    -instances i_chip_core.por_inst \
+#    -name por_grid \
+#    -starts_with POWER
 
-add_pdn_stripe \
-    -grid por_grid \
-    -layer Metal4 \
-    -width 2.5 \
-    -pitch 7 \
-    -offset 0 \
-    -spacing 1 \
-    -nets "VSS VDD" \
-    -starts_with POWER
+#add_pdn_stripe \
+#    -grid por_grid \
+#    -layer Metal4 \
+#    -width 2.5 \
+#    -pitch 7 \
+#    -offset 0 \
+#    -spacing 1 \
+#    -nets "VSS VDD" \
+#    -starts_with POWER
 
-add_pdn_connect \
-    -grid por_grid \
-    -layers "$::env(PDN_VERTICAL_LAYER) $::env(PDN_HORIZONTAL_LAYER)"
+#add_pdn_connect \
+#    -grid por_grid \
+#    -layers "$::env(PDN_VERTICAL_LAYER) $::env(PDN_HORIZONTAL_LAYER)"

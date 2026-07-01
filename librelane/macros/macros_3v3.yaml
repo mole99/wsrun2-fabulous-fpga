@@ -110,78 +110,81 @@ MACROS:
         - pdk_dir::libs.ref/gf180mcu_ocd_ip_sram/lib/gf180mcu_ocd_ip_sram__sram1024x8m8wm1__ss_125C_3v00.lib
     instances:
       # Make sure to specify the SRAMs in pdn_cfg.tcl
+      i_chip_core.fabric_wrapper.sram_12:
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*0))]
+        orientation: E
       i_chip_core.fabric_wrapper.sram_11:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*0))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*1))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_10:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*1))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*2))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_9:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*2))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*3))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_8:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*3))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*4))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_7:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*4))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*5))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_6:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*5))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*6))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_5:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*6))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*7))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_4:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*7))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*8))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_3:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*8))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*9))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_2:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*9))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*10))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_1:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*10))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*11))]
         orientation: E
       i_chip_core.fabric_wrapper.sram_0:
-        location: [expr::(0.56*5223), expr::((0.56*1500) + ((0.56*550)*11))]
+        location: [expr::(0.56*5223), expr::((0.56*1000) + ((0.56*550)*12))]
         orientation: E
 
-  efuse_spi_mem_256x8:
-    gds:
-      - dir::../ip/gf180mcu_re_efuse/gds/efuse_spi_mem_256x8.gds
-    lef:
-      - dir::../ip/gf180mcu_re_efuse/lef/efuse_spi_mem_256x8.lef
-    pnl:
-      - dir::../ip/gf180mcu_re_efuse/verilog/pnl/efuse_spi_mem_256x8.pnl.v
-    #vh:
-    #  - dir::../src/efuse_spi_mem_256x8.vh
-    lib:
-      "*_tt_025C_3v30":
-        - dir::../ip/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_tt_025C_5v00.lib
-      "*_ff_n40C_3v60":
-        - dir::../ip/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_ff_n40C_5v50.lib
-      "*_ss_125C_3v00":
-        - dir::../ip/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_ss_125C_4v50.lib
-    instances:
-      i_chip_core.fabric_wrapper.efuse_0:
-        location: [750, 495]
-        orientation: N
-      i_chip_core.fabric_wrapper.efuse_1:
-        location: [1750, 495]
-        orientation: N
+  #efuse_spi_mem_256x8:
+  #  gds:
+  #    - dir::../ip/gf180mcu_re_efuse/gds/efuse_spi_mem_256x8.gds
+  #  lef:
+  #    - dir::../ip/gf180mcu_re_efuse/lef/efuse_spi_mem_256x8.lef
+  #  pnl:
+  #    - dir::../ip/gf180mcu_re_efuse/verilog/pnl/efuse_spi_mem_256x8.pnl.v
+  #  #vh:
+  #  #  - dir::../src/efuse_spi_mem_256x8.vh
+  #  lib:
+  #    "*_tt_025C_3v30":
+  #      - dir::../ip/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_tt_025C_5v00.lib
+  #    "*_ff_n40C_3v60":
+  #      - dir::../ip/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_ff_n40C_5v50.lib
+  #    "*_ss_125C_3v00":
+  #      - dir::../ip/gf180mcu_re_efuse/lib/efuse_spi_mem_256x8__nom_ss_125C_4v50.lib
+  #  instances:
+  #    i_chip_core.fabric_wrapper.efuse_0:
+  #      location: [750, 495]
+  #      orientation: N
+  #    i_chip_core.fabric_wrapper.efuse_1:
+  #      location: [1750, 495]
+  #      orientation: N
 
-  simple_por:
-    gds:
-      - dir::../ip/simple_por/gds/simple_por.gds.gz
-    lef:
-      - dir::../ip/simple_por/lef/simple_por.lef
-    nl:
-      - dir::../ip/simple_por/verilog/simple_por.v
-    instances:  
-      i_chip_core.por_inst:
-        location: [2617, 510]
-        orientation: MX
+  #simple_por:
+  #  gds:
+  #    - dir::../ip/simple_por/gds/simple_por.gds.gz
+  #  lef:
+  #    - dir::../ip/simple_por/lef/simple_por.lef
+  #  nl:
+  #    - dir::../ip/simple_por/verilog/simple_por.v
+  #  instances:  
+  #    i_chip_core.por_inst:
+  #      location: [2617, 510]
+  #      orientation: MX
 
   classic_fabric_wsrun2:
     gds:
@@ -192,7 +195,7 @@ MACROS:
       - dir::../ip/fabulous-fabrics/fabrics/classic_fabric_wsrun2/macro/gf180mcuD/nl/classic_fabric_wsrun2.nl.v
     instances:
       i_chip_core.fabric_wrapper.classic_fabric_wsrun2:
-        location: [expr::(0.56*1100), expr::(0.56*1660)]
+        location: [expr::(0.56*1050), expr::(0.56*1000)]
         orientation: N
 
 RSZ_DONT_TOUCH_LIST:
@@ -216,5 +219,5 @@ PDN_MACRO_CONNECTIONS:
 - "i_chip_core.fabric_wrapper.sram_9 VDD VSS VDD VSS"
 - "i_chip_core.fabric_wrapper.sram_10 VDD VSS VDD VSS"
 - "i_chip_core.fabric_wrapper.sram_11 VDD VSS VDD VSS"
-- "i_chip_core.fabric_wrapper.efuse_0 VDD VSS VDD VSS"
-- "i_chip_core.fabric_wrapper.efuse_1 VDD VSS VDD VSS"
+#- "i_chip_core.fabric_wrapper.efuse_0 VDD VSS VDD VSS"
+#- "i_chip_core.fabric_wrapper.efuse_1 VDD VSS VDD VSS"
