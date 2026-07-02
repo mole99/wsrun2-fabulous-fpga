@@ -195,7 +195,7 @@ MACROS:
       - dir::../ip/fabulous-fabrics/fabrics/classic_fabric_wsrun2/macro/gf180mcuD/nl/classic_fabric_wsrun2.nl.v
     instances:
       i_chip_core.fabric_wrapper.classic_fabric_wsrun2:
-        location: [expr::(0.56*1050), expr::(0.56*1000)]
+        location: [expr::(0.56*1100), expr::(0.56*1000)]
         orientation: N
 
 RSZ_DONT_TOUCH_LIST:

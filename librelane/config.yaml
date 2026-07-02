@@ -198,5 +198,8 @@ KLAYOUT_ANTENNA_OPTIONS:
 
 
 INSERT_ECO_DIODES:
-- target: _1245_/A
-- target: _1243_/A
+- target: fpga[2].pad/A
+- target: _1264_/A
+- target: _1261_/A
+- target: _1257_/A
+- target: _1312_/A
