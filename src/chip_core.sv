@@ -83,7 +83,7 @@ module chip_core #(
     parameter MaxFramesPerCol = 20;
 
     parameter NumColumns = 9;
-    parameter NumRows = 14;
+    parameter NumRows = 15;
 
     parameter FABRIC_NUM_IO_WEST = 48;
     
@@ -297,7 +297,7 @@ module chip_core #(
 
     // TODO adjust BITSTREAM_LENGTH_WORDS
     fabric_spi_controller #(
-        .BITSTREAM_LENGTH_WORDS (32'hA92),
+        .BITSTREAM_LENGTH_WORDS (32'hB46),
         .SLOT_OFFSET_WORDS      (32'h1000),
         .NUM_SLOTS              (16)
     ) fabric_spi_controller (
