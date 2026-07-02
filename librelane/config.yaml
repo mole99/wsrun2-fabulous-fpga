@@ -203,3 +203,5 @@ INSERT_ECO_DIODES:
 - target: _1261_/A
 - target: _1257_/A
 - target: _1312_/A
+- target: _1310_/A
+- target: _1255_/A
