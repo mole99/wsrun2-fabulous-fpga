@@ -1,6 +1,20 @@
-# gf180mcu Project Template
+# gf180mcu FABulous FPGA (3.3V)
 
-Project template for wafer.space MPW runs using the gf180mcu PDK.
+This is an improved version of my FABulous FPGA on wafer.space run 1. Notably, it uses 3.3V standard cells and SRAM macros, as well as 3.3V/5V compatible I/O cells. 
+
+![GF180MCU FABulous FPGA (3.3V)](img/chip_top_gf180mcu_custom_white.png)
+
+| Primitive | Available | Description |
+|---|---|---|
+| FABULOUS_LC | 624  | Logic cells with LUT4+FF and carry-chain. |
+| GF_IOBUF | 48  | Input/output buffer. Configurable input type (cmos/schmitt), slew rate (fast/slow), pull-up, pull-down. |
+| IDDR | 48  | Input double data rate buffer. |
+| ODDR | 48  | Output double data rate buffer. |
+| GBUF | 4  | Global buffer to supply clock, reset and enable to the flip-flops. |
+| RAM_32x4_2R_1W | 13 | RAM that is 4 bit wide and 32 words deep. It has two read ports and one write port. |
+| GF_SRAM_1024x8_1RW | 13 | SRAM with 1024x8 bits of data and one synchronous read/write port. |
+| SYS_RESET | 1 | Can be used to reset the design after configuration. |
+| WARMBOOT | 1 | Can be used to reset the design after configuration. |
 
 ## Dependencies
 
