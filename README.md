@@ -14,7 +14,7 @@ This is an improved version of my FABulous FPGA on wafer.space run 1. Notably, i
 | RAM_32x4_2R_1W | 13 | RAM that is 4 bit wide and 32 words deep. It has two read ports and one write port. |
 | GF_SRAM_1024x8_1RW | 13 | SRAM with 1024x8 bits of data and one synchronous read/write port. |
 | SYS_RESET | 1 | Can be used to reset the design after configuration. |
-| WARMBOOT | 1 | Can be used to reset the design after configuration. |
+| WARMBOOT | 1 | Reconfigure the FPGA from one of 16 slots. |
 
 ## Dependencies
 
